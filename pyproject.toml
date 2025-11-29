@@ -1,0 +1,9 @@
+[project]
+name = "deal-checker"
+version = "0.1.0"
+description = "A tool to check a static number of websites for specific deals"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "playwright>=1.56.0",
+]
