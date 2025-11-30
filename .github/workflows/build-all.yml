@@ -46,14 +46,21 @@ jobs:
           if ($tarFile) {
               # Pak uit naar tijdelijke folder
               $tempFolder = Join-Path $env:TEMP "uv_extract"
-              if (-Not (Test-Path $tempFolder)) { New-Item -ItemType Directory -Path $tempFolder }
+              if (Test-Path $tempFolder) { Remove-Item $tempFolder -Recurse -Force }
+              New-Item -ItemType Directory -Path $tempFolder | Out-Null
               tar -xzf $tarFile.FullName -C $tempFolder
 
-              # Zoek de eerste .exe en kopieer naar build
-              $exe = Get-ChildItem -Path $tempFolder -Recurse -Filter *.exe | Select-Object -First 1
-              if ($exe) {
-                  Copy-Item $exe.FullName -Destination build -Force
+              # Zoek alle .exe bestanden in de uitgepakte folder
+              $executables = Get-ChildItem -Path $tempFolder -Recurse -Filter *.exe
+              if ($executables.Count -gt 0) {
+                  foreach ($exe in $executables) {
+                      Copy-Item $exe.FullName -Destination build -Force
+                  }
+              } else {
+                  Write-Host "Geen .exe gevonden in tar.gz!"
               }
+          } else {
+              Write-Host "Geen tar.gz bestand gevonden!"
           }
 
       - name: List build folder
