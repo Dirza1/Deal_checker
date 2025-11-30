@@ -36,36 +36,30 @@ jobs:
 
       - name: Build Windows executable
         shell: powershell
-        run: uv build
+        run: uv build --target windows
 
-      - name: Debug Zoek tar.gz bestanden
-        shell: powershell
-        run: Get-ChildItem -Path . -Recurse -Filter *.tar.gz
-
-      - name: Extract EXE from tar.gz
+      - name: Debug: Bekijk dist folder
         shell: powershell
         run: |
-          # Zoek tar.gz overal in de repo
-          $tarFile = Get-ChildItem -Path . -Recurse -Filter *.tar.gz | Select-Object -First 1
-          if ($tarFile) {
-              # Pak uit naar tijdelijke folder
-              $tempFolder = Join-Path $env:TEMP "uv_extract"
-              if (Test-Path $tempFolder) { Remove-Item $tempFolder -Recurse -Force }
-              New-Item -ItemType Directory -Path $tempFolder | Out-Null
-              tar -xzf $tarFile.FullName -C $tempFolder
+          if (Test-Path dist) {
+              Write-Host "Dist folder inhoud:"
+              Get-ChildItem -Recurse dist
+          } else {
+              Write-Host "Geen dist folder gevonden"
+          }
 
-              # Zoek alle .exe bestanden in de uitgepakte folder
-              $executables = Get-ChildItem -Path $tempFolder -Recurse -Filter *.exe
-              if ($executables.Count -gt 0) {
-                  foreach ($exe in $executables) {
-                      Write-Host "Kopieer $($exe.FullName) naar build"
-                      Copy-Item $exe.FullName -Destination build -Force
-                  }
-              } else {
-                  Write-Host "Geen .exe gevonden in tar.gz!"
+      - name: Copy EXE to build folder
+        shell: powershell
+        run: |
+          # Zoek alle .exe in de dist folder
+          $executables = Get-ChildItem -Path dist -Recurse -Filter *.exe -ErrorAction SilentlyContinue
+          if ($executables.Count -gt 0) {
+              foreach ($exe in $executables) {
+                  Write-Host "Kopieer $($exe.FullName) naar build"
+                  Copy-Item $exe.FullName -Destination build -Force
               }
           } else {
-              Write-Host "Geen tar.gz bestand gevonden!"
+              Write-Host "Geen .exe gevonden in dist folder!"
           }
 
       - name: List build folder
@@ -77,4 +71,3 @@ jobs:
         with:
           name: windows-exe
           path: build/*.exe
-
