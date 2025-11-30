@@ -1,0 +1,32 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install UV
+        shell: powershell
+        run: |
+          irm https://astral.sh/install.ps1 | iex
+
+      - name: Sync environment (optional but recommended)
+        run: uv sync
+
+      - name: Build Windows executable
+        run: uv build
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: build/windows*/**
