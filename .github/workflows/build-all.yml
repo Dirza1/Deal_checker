@@ -52,3 +52,12 @@ jobs:
         with:
           name: windows-exe
           path: build/**/*
+
+      - name: Extract EXE from tar.gz
+        shell: powershell
+        run: |
+           $tarFile = Get-ChildItem build\*.tar.gz | Select-Object -First 1
+           if ($tarFile) {
+               tar -xzf $tarFile.FullName -C build
+           }
+
