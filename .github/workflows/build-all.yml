@@ -38,7 +38,7 @@ jobs:
         shell: powershell
         run: uv build
 
-      - name: Debug: Zoek tar.gz bestanden
+      - name: Debug Zoek tar.gz bestanden
         shell: powershell
         run: Get-ChildItem -Path . -Recurse -Filter *.tar.gz
 
@@ -77,4 +77,4 @@ jobs:
         with:
           name: windows-exe
           path: build/*.exe
-          
+
