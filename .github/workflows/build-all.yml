@@ -43,7 +43,7 @@ jobs:
       # Build Windows executable in known folder
       # ---------------------------
       - name: Build Windows executable
-        run: uv build -d build/windows-x86_64
+        run: uv build
 
       # ---------------------------
       # List build folder (debug)
