@@ -36,11 +36,24 @@ jobs:
 
       - name: Build Windows executable
         shell: powershell
+        run: uv build
+
+      - name: Extract EXE from tar.gz
+        shell: powershell
         run: |
-          uv build
-          # Kopieer output naar de vaste build folder (pas 'dist' aan als uv een andere output folder gebruikt)
-          if (Test-Path dist) {
-              Copy-Item -Path dist\* -Destination build -Recurse -Force
+          # Zoek het tar.gz bestand
+          $tarFile = Get-ChildItem build\*.tar.gz | Select-Object -First 1
+          if ($tarFile) {
+              # Pak uit naar tijdelijke folder
+              $tempFolder = Join-Path $env:TEMP "uv_extract"
+              if (-Not (Test-Path $tempFolder)) { New-Item -ItemType Directory -Path $tempFolder }
+              tar -xzf $tarFile.FullName -C $tempFolder
+
+              # Zoek de eerste .exe en kopieer naar build
+              $exe = Get-ChildItem -Path $tempFolder -Recurse -Filter *.exe | Select-Object -First 1
+              if ($exe) {
+                  Copy-Item $exe.FullName -Destination build -Force
+              }
           }
 
       - name: List build folder
@@ -51,13 +64,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-exe
-          path: build/**/*
-
-      - name: Extract EXE from tar.gz
-        shell: powershell
-        run: |
-           $tarFile = Get-ChildItem build\*.tar.gz | Select-Object -First 1
-           if ($tarFile) {
-               tar -xzf $tarFile.FullName -C build
-           }
-
+          path: build/*.exe
