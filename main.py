@@ -54,6 +54,6 @@ def main(playwright: Playwright):
     brouwser.close()
 
 if __name__ == "__main__":
-    #if datetime.date.today().weekday() == 0:
+    if datetime.date.today().weekday() == 0:
         with sync_playwright() as playwright:
             main(playwright=playwright) 
