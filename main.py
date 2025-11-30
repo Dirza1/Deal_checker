@@ -20,7 +20,7 @@ def main(playwright: Playwright):
 
     chrome = playwright.chromium
     brouwser = chrome.launch(headless=True)
-    with open("aanbiedingen",mode="w",encoding="utf-8") as file:
+    with open("aanbiedingen.log",mode="w",encoding="utf-8") as file:
         for supermarked,url in supermarket_url.items():
             page = brouwser.new_page()
             file.write(f"AANBIEDIGEN VAN {supermarked.upper()}!\n")
