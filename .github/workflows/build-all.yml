@@ -1,4 +1,4 @@
-name: Build executables (Windows, Linux, macOS)
+name: Build Windows EXE
 
 on:
   push:
@@ -7,43 +7,13 @@ on:
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: windows-latest
 
     steps:
-      # ---------------------------
-      # Checkout repository
-      # ---------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---------------------------
-      # Install UV (cross-platform)
-      # ---------------------------
-      - name: Install UV (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          curl -L "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-musl.tar.gz" -o uv.tar.gz
-          mkdir uv-temp
-          tar -xzf uv.tar.gz -C uv-temp
-          # uv binary staat nu in uv-temp
-          chmod +x uv-temp/uv
-          echo "$PWD/uv-temp" >> $GITHUB_PATH
-
-      - name: Install UV (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          curl -L "https://github.com/astral-sh/uv/releases/download/0.7.27/uv-x86_64-apple-darwin.zip" -o uv.zip
-          unzip uv.zip -d uv
-          chmod +x uv/uv
-          echo "$PWD/uv" >> $GITHUB_PATH
-
-
-      - name: Install UV (Windows)
-        if: runner.os == 'Windows'
+      - name: Install UV from GitHub Releases
         shell: powershell
         run: |
           $url = "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip"
@@ -51,26 +21,17 @@ jobs:
           Expand-Archive uv.zip -DestinationPath $env:USERPROFILE\uv
           echo "$env:USERPROFILE\uv" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      # ---------------------------
-      # Verify UV install
-      # ---------------------------
-      - name: Verify UV
+      - name: Verify UV install
         run: uv --version
 
-      # ---------------------------
-      # Sync environment & build
-      # ---------------------------
       - name: Sync environment
         run: uv sync
 
-      - name: Build executable
+      - name: Build Windows executable
         run: uv build
 
-      # ---------------------------
-      # Upload artifacts
-      # ---------------------------
-      - name: Upload artifacts
+      - name: Upload executable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: exe-${{ runner.os }}
+          name: windows-exe
           path: build/**
