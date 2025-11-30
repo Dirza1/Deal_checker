@@ -5,5 +5,6 @@ description = "A tool to check a static number of websites for specific deals"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "beautifulsoup4>=4.14.2",
     "playwright>=1.56.0",
 ]
