@@ -38,11 +38,15 @@ jobs:
         shell: powershell
         run: uv build
 
+      - name: Debug: Zoek tar.gz bestanden
+        shell: powershell
+        run: Get-ChildItem -Path . -Recurse -Filter *.tar.gz
+
       - name: Extract EXE from tar.gz
         shell: powershell
         run: |
-          # Zoek het tar.gz bestand
-          $tarFile = Get-ChildItem build\*.tar.gz | Select-Object -First 1
+          # Zoek tar.gz overal in de repo
+          $tarFile = Get-ChildItem -Path . -Recurse -Filter *.tar.gz | Select-Object -First 1
           if ($tarFile) {
               # Pak uit naar tijdelijke folder
               $tempFolder = Join-Path $env:TEMP "uv_extract"
@@ -54,6 +58,7 @@ jobs:
               $executables = Get-ChildItem -Path $tempFolder -Recurse -Filter *.exe
               if ($executables.Count -gt 0) {
                   foreach ($exe in $executables) {
+                      Write-Host "Kopieer $($exe.FullName) naar build"
                       Copy-Item $exe.FullName -Destination build -Force
                   }
               } else {
