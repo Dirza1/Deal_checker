@@ -27,10 +27,24 @@ jobs:
       - name: Sync environment
         run: uv sync
 
+      - name: Maak build map aan
+        shell: powershell
+        run: |
+          if (-Not (Test-Path build)) {
+              New-Item -ItemType Directory -Path build
+          }
+
       - name: Build Windows executable
-        run: uv build
+        shell: powershell
+        run: |
+          uv build
+          # Kopieer output naar de vaste build folder (pas 'dist' aan als uv een andere output folder gebruikt)
+          if (Test-Path dist) {
+              Copy-Item -Path dist\* -Destination build -Recurse -Force
+          }
 
       - name: List build folder
+        shell: powershell
         run: dir build
 
       - name: Upload executable artifact
