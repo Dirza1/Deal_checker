@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright, Playwright
-import time
 from collections import defaultdict
 from bs4 import BeautifulSoup
 import re
@@ -54,6 +53,6 @@ def main(playwright: Playwright):
     brouwser.close()
 
 if __name__ == "__main__":
-    #if datetime.date.today().weekday() == 0:
+    if datetime.date.today().weekday() == 0:
         with sync_playwright() as playwright:
             main(playwright=playwright) 
