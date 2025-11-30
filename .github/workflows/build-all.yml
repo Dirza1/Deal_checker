@@ -31,9 +31,10 @@ jobs:
       - name: Install UV (macOS)
         if: runner.os == 'macOS'
         run: |
-          curl -L "https://github.com/astral-sh/uv/releases/latest/download/uv-aarch64-apple-darwin.zip" -o uv.zip
+          curl -L "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-apple-darwin.zip" -o uv.zip
           unzip uv.zip -d uv
           echo "$PWD/uv" >> $GITHUB_PATH
+
 
       - name: Install UV (Windows)
         if: runner.os == 'Windows'
