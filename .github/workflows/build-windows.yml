@@ -14,10 +14,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install UV via winget
+      - name: Install UV from GitHub Releases
         shell: powershell
         run: |
-          winget install --id Astral-sh.uv -e --accept-package-agreements --accept-source-agreements
+          $url = "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip"
+          Invoke-WebRequest -Uri $url -OutFile uv.zip
+          Expand-Archive uv.zip -DestinationPath $env:USERPROFILE\uv
+          echo "$env:USERPROFILE\uv" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
 
       - name: Sync environment (optional but recommended)
         run: uv sync
