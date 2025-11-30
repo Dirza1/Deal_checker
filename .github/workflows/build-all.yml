@@ -38,7 +38,7 @@ jobs:
         shell: powershell
         run: uv build --target windows
 
-      - name: Debug: Bekijk dist folder
+      - name: Debug Bekijk dist folder
         shell: powershell
         run: |
           if (Test-Path dist) {
