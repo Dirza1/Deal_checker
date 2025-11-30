@@ -27,9 +27,11 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           curl -L "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-musl.tar.gz" -o uv.tar.gz
-          tar -xzf uv.tar.gz
-          chmod +x uv/uv
-          echo "$PWD/uv" >> $GITHUB_PATH
+          mkdir uv-temp
+          tar -xzf uv.tar.gz -C uv-temp
+          # uv binary staat nu in uv-temp
+          chmod +x uv-temp/uv
+          echo "$PWD/uv-temp" >> $GITHUB_PATH
 
       - name: Install UV (macOS)
         if: runner.os == 'macOS'
