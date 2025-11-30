@@ -10,16 +10,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # ---------------------------
-      # Checkout repository
-      # ---------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---------------------------
-      # Install UV
-      # ---------------------------
-      - name: Install UV from GitHub Releases
+      - name: Install UV
         shell: powershell
         run: |
           $url = "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip"
@@ -27,35 +21,20 @@ jobs:
           Expand-Archive uv.zip -DestinationPath $env:USERPROFILE\uv
           echo "$env:USERPROFILE\uv" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      # ---------------------------
-      # Verify UV install
-      # ---------------------------
       - name: Verify UV
         run: uv --version
 
-      # ---------------------------
-      # Sync dependencies
-      # ---------------------------
       - name: Sync environment
         run: uv sync
 
-      # ---------------------------
-      # Build Windows executable in known folder
-      # ---------------------------
       - name: Build Windows executable
         run: uv build
 
-      # ---------------------------
-      # List build folder (debug)
-      # ---------------------------
       - name: List build folder
-        run: dir build/windows-x86_64
+        run: dir build
 
-      # ---------------------------
-      # Upload artifact
-      # ---------------------------
       - name: Upload executable artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-exe
-          path: build/windows-x86_64/**
+          path: build/**/*
