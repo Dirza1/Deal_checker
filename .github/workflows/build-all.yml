@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Windows executable
         shell: powershell
-        run: uv build -- --target windows
+        run: uv build
 
       - name: Debug Bekijk dist folder
         shell: powershell
