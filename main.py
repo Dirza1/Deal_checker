@@ -13,9 +13,9 @@ def main(playwright: Playwright):
     "aldi": "https://www.supermarktaanbiedingen.com/aanbiedingen/aldi",
 })
     with open("te_vinden.log",mode="r",encoding="utf-8") as te_zoeken:
-        acties = te_zoeken.read()
+        acties:str = te_zoeken.read()
     
-    zoek_lijst = acties.split(sep=",")
+    zoek_lijst:list[str] = acties.split(sep=",")
     print(len(zoek_lijst))
 
     chrome = playwright.chromium
