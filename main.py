@@ -3,6 +3,7 @@ from collections import defaultdict
 from bs4 import BeautifulSoup
 import re
 import datetime
+import ezgmail
 
 def main(playwright: Playwright):
     supermarket_url:defaultdict[str,str] = defaultdict(str,{
@@ -51,6 +52,7 @@ def main(playwright: Playwright):
                 page.close()
 
     brouwser.close()
+    ezgmail.send("jasper.olthof@xs4all.nl",subject="Weekelijkse korting",body="Dit zijn ed aanbiedingen van deze week",attachments="aanbiedingen.log")
 
 if __name__ == "__main__":
     #if datetime.date.today().weekday() == 0:
