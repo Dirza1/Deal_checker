@@ -1,0 +1,33 @@
+name: Run Python Script Weekly
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Maandag 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright beautifulsoup4 ezgmail
+          playwright install --with-deps
+
+      - name: Setup ezgmail credentials
+        run: |
+          echo "${{ secrets.CREDENTIALS_SECRED }}" > credentials.json
+          echo "${{ secrets.TOKEN_SECRED }}" > token.json
+
+      - name: Run script
+        run: |
+          python jouw_script.py || echo "Script failed"

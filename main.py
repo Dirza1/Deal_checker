@@ -26,7 +26,7 @@ def main(playwright: Playwright):
             page = brouwser.new_page()
             file.write(f"AANBIEDIGEN VAN {supermarked.upper()}!\n")
             print(f"Supermarkt = {supermarked}, URL = {url}")
-            page.goto(url=url,wait_until="networkidle")
+            page.goto(url=url,wait_until="networkidle",timeout=60000)
             soup = BeautifulSoup(page.content(), "html.parser")
             aanbiedingen = soup.find_all(id=re.compile("product-"))
             print(len(aanbiedingen))
@@ -49,12 +49,11 @@ def main(playwright: Playwright):
                             file.write(f"Aanbieding: {Aanbieding_tietel.text}.\n"
                                     f"Aanbieding text: {Aanbieding_text.text}.\n")
                             file.write("\n")
-                page.close()
+            page.close()
 
     brouwser.close()
-    ezgmail.send("jasper.olthof@xs4all.nl",subject="Weekelijkse korting",body="Dit zijn ed aanbiedingen van deze week",attachments="aanbiedingen.log")
+    ezgmail.send(recipient=["jasper.olthof@xs4all.nl","donker.leonie7@gmail.com"],subject="Weekelijkse korting",body="Dit zijn ed aanbiedingen van deze week",attachments=["aanbiedingen.log"])
 
 if __name__ == "__main__":
-    #if datetime.date.today().weekday() == 0:
-        with sync_playwright() as playwright:
-            main(playwright=playwright) 
+    with sync_playwright() as playwright:
+        main(playwright=playwright) 
