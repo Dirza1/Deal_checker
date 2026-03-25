@@ -26,7 +26,7 @@ def main(playwright: Playwright):
             page = brouwser.new_page()
             file.write(f"AANBIEDIGEN VAN {supermarked.upper()}!\n")
             print(f"Supermarkt = {supermarked}, URL = {url}")
-            page.goto(url=url,wait_until="networkidle",timeout=60000)
+            page.goto(url=url, wait_until="domcontentloaded", timeout=60000)
             soup = BeautifulSoup(page.content(), "html.parser")
             aanbiedingen = soup.find_all(id=re.compile("product-"))
             print(len(aanbiedingen))
