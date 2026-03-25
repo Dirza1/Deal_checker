@@ -20,7 +20,10 @@ def main(playwright: Playwright):
     print(len(zoek_lijst))
 
     chrome = playwright.chromium
-    brouwser = chrome.launch(headless=True)
+    brouwser = chrome.launch(
+    headless=True,
+    args=["--no-sandbox", "--disable-blink-features=AutomationControlled"]
+)
     with open("aanbiedingen.log",mode="w",encoding="utf-8") as file:
         for supermarked,url in supermarket_url.items():
             page = brouwser.new_page()

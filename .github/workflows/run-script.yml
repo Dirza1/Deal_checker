@@ -21,12 +21,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install playwright beautifulsoup4 ezgmail
-          playwright install --with-deps
+          playwright install chromium --with-deps
 
       - name: Setup ezgmail credentials
         run: |
-          echo "${{ secrets.CREDENTIALS_SECRED }}" > credentials.json
-          echo "${{ secrets.TOKEN_SECRED }}" > token.json
+          printf '%s' "${{ secrets.CREDENTIALS_SECRED }}" > credentials.json
+          printf '%s' "${{ secrets.TOKEN_SECRED }}" > token.json
 
       - name: Run script
         run: |
