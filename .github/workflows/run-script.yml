@@ -30,4 +30,4 @@ jobs:
 
       - name: Run script
         run: |
-          python jouw_script.py || echo "Script failed"
+          python main.py || echo "Script failed"
