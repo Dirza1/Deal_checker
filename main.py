@@ -55,7 +55,10 @@ def main(playwright: Playwright):
             page.close()
 
     brouwser.close()
-    ezgmail.send(recipient=["jasper.olthof@xs4all.nl","donker.leonie7@gmail.com"],subject="Weekelijkse korting",body="Dit zijn ed aanbiedingen van deze week",attachments=["aanbiedingen.log"])
+    ezgmail.send(recipient=["jasper.olthof@xs4all.nl","donker.leonie7@gmail.com"],
+                 subject="Weekelijkse korting",
+                 body="Dit zijn ed aanbiedingen van deze week",
+                 attachments=["aanbiedingen.log"])
 
 if __name__ == "__main__":
     with sync_playwright() as playwright:
