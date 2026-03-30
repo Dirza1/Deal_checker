@@ -24,7 +24,7 @@ def main(playwright: Playwright):
     headless=True,
     args=["--no-sandbox", "--disable-blink-features=AutomationControlled"]
 )
-    with open("aanbiedingen.log",mode="w",encoding="utf-8") as file:
+    with open("aanbiedingen.txt",mode="w",encoding="utf-8") as file:
         for supermarked,url in supermarket_url.items():
             page = brouwser.new_page()
             file.write(f"AANBIEDIGEN VAN {supermarked.upper()}!\n")
@@ -41,7 +41,8 @@ def main(playwright: Playwright):
                     continue
                 Oud_nieuw = aanbieding.find_all("span")
                 for actie in zoek_lijst:
-                    if actie in Aanbieding_tietel.text.lower():
+                    pattern = rf"\b{re.escape(actie)}\b"
+                    if re.search(pattern, Aanbieding_tietel.text.lower()):
                         if len(Oud_nieuw) == 2:
                             file.write(f"Aanbieding: {Aanbieding_tietel.text}.\n"
                                     f"Aanbieding text: {Aanbieding_text.text}.\n"
@@ -55,10 +56,12 @@ def main(playwright: Playwright):
             page.close()
 
     brouwser.close()
-    ezgmail.send(recipient=["jasper.olthof@xs4all.nl","donker.leonie7@gmail.com"],
-                 subject="Weekelijkse korting",
-                 body="Dit zijn ed aanbiedingen van deze week",
-                 attachments=["aanbiedingen.log"])
+    recipient:list[str] = ["jasper.olthof@xs4all.nl","donker.leonie7@gmail.com"]
+    for person in recipient:
+        ezgmail.send(recipient=person,
+                    subject="Weekelijkse korting",
+                    body="Dit zijn ed aanbiedingen van deze week",
+                    attachments=["aanbiedingen.txt"])
 
 if __name__ == "__main__":
     with sync_playwright() as playwright:
