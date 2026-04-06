@@ -53,6 +53,7 @@ def main(playwright: Playwright):
                             file.write(f"Aanbieding: {Aanbieding_tietel.text}.\n"
                                     f"Aanbieding text: {Aanbieding_text.text}.\n")
                             file.write("\n")
+            file.write("\n\n")
             page.close()
 
     brouwser.close()
@@ -60,7 +61,7 @@ def main(playwright: Playwright):
     for person in recipient:
         ezgmail.send(recipient=person,
                     subject="Weekelijkse korting",
-                    body="Dit zijn ed aanbiedingen van deze week",
+                    body="Dit zijn de aanbiedingen van deze week",
                     attachments=["aanbiedingen.txt"])
 
 if __name__ == "__main__":
