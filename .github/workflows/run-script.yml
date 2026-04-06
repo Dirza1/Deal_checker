@@ -25,8 +25,8 @@ jobs:
 
       - name: Setup ezgmail credentials
         run: |
-          printf '%s' "${{ secrets.CREDENTIALS_SECRED }}" > credentials.json
-          printf '%s' "${{ secrets.TOKEN_SECRED }}" > token.json
+          echo "${{ secrets.CREDENTIALS_SECRET_B64 }}" | base64 --decode > credentials.json
+          echo "${{ secrets.TOKEN_SECRET_B64 }}" | base64 --decode > token.json
 
       - name: Run script
         run: |
